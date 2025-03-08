@@ -1,1 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3  # Số lượng Pod bạn muốn chạy
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest  # Sử dụng image nginx mới nhất
+        ports:
+        - containerPort: 80  # Cổng trong container mà Nginx sẽ chạy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx  # Chọn các Pods có label 'app: nginx'
+  ports:
+    - protocol: TCP
+      port: 80         # Cổng mà service lắng nghe
+      targetPort: 80    # Cổng trong pod mà nginx đang chạy
+      nodePort: 30001   # Cổng nodePort (có thể chọn hoặc để Kubernetes tự động gán)
+  type: NodePort  # Chỉ định kiểu service là NodePort
 
